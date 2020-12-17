@@ -32,6 +32,12 @@
             android:title="@string/app_notifications"
             android:menuCategory="system" />
         <item
+            android:id="@+id/frontail"
+            android:icon="@drawable/ic_view_dashboard_outline_grey_24dp"
+            android:title="@string/mainmenu_openhab_frontail"
+            android:menuCategory="system" />
+        <!-- TODO icon -->
+        <item
             android:id="@+id/nfc"
             android:icon="@drawable/ic_nfc_grey_24dp"
             android:title="@string/intro_nfc"
