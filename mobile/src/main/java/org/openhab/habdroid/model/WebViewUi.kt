@@ -67,7 +67,7 @@ data class WebViewUi(
             "http",
             0,
             MainActivity.ACTION_FRONTAIL_SELECTED,
-            R.mipmap.ic_shortcut_oh3_ui // TODO
+            R.mipmap.ic_shortcut_frontail
         )
     }
 }

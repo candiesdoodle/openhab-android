@@ -19,9 +19,9 @@
     <SwitchPreference
         android:defaultValue="false"
         android:key="show_frontail"
-        android:icon="@drawable/ic_nfc_grey_24dp"
+        android:icon="@drawable/ic_outline_format_align_left_24"
         app:summary="@string/frontail_pref_summary"
-        android:title="@string/mainmenu_openhab_frontail" /> <!-- TODO icon -->
+        android:title="@string/mainmenu_openhab_frontail" />
     <SwitchPreference
         android:defaultValue="true"
         android:key="show_nfc"
