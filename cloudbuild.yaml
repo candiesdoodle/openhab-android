@@ -1,0 +1,27 @@
+# cloudbuild.yaml
+
+steps:
+
+- name: gcr.io/$PROJECT_ID/cloudbuild-android
+  id: 'docker-pull'
+  args: ['cp', '-a', '.', '/persistent_volume']
+  volumes:
+  - name: data
+    path: /persistent_volume
+    
+- name: gcr.io/cloud-builders/docker
+  id: 'gradle-build'
+  volumes:
+  - name: data
+    path: /persistent_volume
+  args: ['run', '-v', 'data:/workspace', '--rm', 'gcr.io/$PROJECT_ID/cloudbuild', '/bin/sh', '-c', 'cd /workspace && ./gradlew mobile:assembleDebug && mv mobile/build/outputs/apk/debug/mobile-debug.apk mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk && ls -la mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk']
+
+
+- name: gcr.io/cloud-builders/gsutil
+  id: 'publish-gsutil'
+  args: ['cp', '/persistent_volume/mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk', 'gs://openhab-android/']
+  volumes:
+  - name: data
+    path: /persistent_volume
+
+timeout: 1200s
