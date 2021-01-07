@@ -5,13 +5,24 @@ steps:
   - name: 'vol1'
     path: '/persistent_volume'
   args: ['cp', '-a', '.', '/persistent_volume']
-  
+
+- name: 'ubuntu'
+  volumes:
+  - name: 'vol1'
+    path: '/persistent_volume'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+        mkdir /persistent_volume/.gradle/ && echo "mapsApiKey=AIzaSyA2t2893e9wccs9EnlnauJRgtqFNYQSp-o" >> /persistent_volume/.gradle/gradle.properties && echo "org.gradle.daemon=true" >> /persistent_volume/.gradle/gradle.properties
+
+
 # Build APK with Gradle Image from mounted /persistent_volume using name: vol1
 - name: 'gcr.io/cloud-builders/docker'
   volumes:
   - name: 'vol1'
     path: '/persistent_volume'
-  args: ['run', '-v', 'vol1:/home/app', '--rm', 'gcr.io/fullstackgcp/gradle', '/bin/sh', '-c', 'cd /home/app && ./gradlew clean assembleDebug']
+  args: ['run', '-v', 'vol1:/home/app', '--rm', 'gcr.io/cloud-builders/gradle', '/bin/sh', '-c', 'cd /home/app && ./gradlew clean :mobile:assembleFullBeta']
 
 # Push the APK Output from vol1 to your GCS Bucket with Short Commit SHA.
 - name: 'gcr.io/cloud-builders/gsutil'
