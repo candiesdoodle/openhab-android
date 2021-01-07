@@ -14,12 +14,12 @@ steps:
   volumes:
   - name: data
     path: /persistent_volume
-  args: ['run', '-v', 'data:/workspace', '--rm', 'gcr.io/$PROJECT_ID/cloudbuild-android', '/bin/sh', '-c', 'cd /workspace && ./gradlew mobile:assembleDebug && mv mobile/build/outputs/apk/debug/mobile-debug.apk mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk && ls -la mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk']
+  args: ['run', '-v', 'data:/workspace', '--rm', 'gcr.io/$PROJECT_ID/cloudbuild-android', '/bin/sh', '-c', 'cd /workspace && ./gradlew mobile:assembleDebug && mkdir tempapk && find mobile/build/outputs/apk -name "*.apk" -exec mv {} /workspace/tempapk/ \; && cd /workspace/tempapk && find . -depth -name "*.apk" -exec sh -c \'f="{}"; mv -- "$f" "${f%.apk}_$(date +%d%m%Y-%H%M).apk"\' \; && ls -la /workspace/tempapk/']
 
 
 - name: gcr.io/cloud-builders/gsutil
   id: 'publish-gsutil'
-  args: ['cp', '/persistent_volume/mobile/build/outputs/apk/debug/$REPO_NAME-$SHORT_SHA-debug.apk', 'gs://openhab-android/']
+  args: ['cp', '/persistent_volume/tempapk/*.apk', 'gs://openhab-android/']
   volumes:
   - name: data
     path: /persistent_volume
