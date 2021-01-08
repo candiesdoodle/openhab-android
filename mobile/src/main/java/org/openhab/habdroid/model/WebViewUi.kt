@@ -24,6 +24,8 @@ data class WebViewUi(
     @StringRes val errorRes: Int,
     val urlToLoad: String,
     val urlForError: String,
+    val overridePort: Int?,
+    val overrideScheme: String?,
     val serverFlag: Int,
     val shortcutAction: String,
     @DrawableRes val shortcutIconRes: Int
@@ -35,6 +37,8 @@ data class WebViewUi(
             R.string.habpanel_error,
             "/habpanel/index.html",
             "/rest/events",
+            null,
+            null,
             ServerProperties.SERVER_FLAG_HABPANEL_INSTALLED,
             MainActivity.ACTION_HABPANEL_SELECTED,
             R.mipmap.ic_shortcut_habpanel
@@ -46,9 +50,24 @@ data class WebViewUi(
             R.string.oh3_ui_error,
             "/",
             "/",
+            null,
+            null,
             ServerProperties.SERVER_FLAG_OH3_UI,
             MainActivity.ACTION_OH3_UI_SELECTED,
             R.mipmap.ic_shortcut_oh3_ui
+        )
+
+        val FRONTAIL = WebViewUi(
+            R.string.mainmenu_openhab_frontail,
+            R.string.mainmenu_openhab_frontail_on_server,
+            R.string.frontail_error,
+            "/",
+            "/",
+            9001,
+            "http",
+            0,
+            MainActivity.ACTION_FRONTAIL_SELECTED,
+            R.mipmap.ic_shortcut_frontail
         )
     }
 }
