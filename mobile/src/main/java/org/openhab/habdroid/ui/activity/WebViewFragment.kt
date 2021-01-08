@@ -60,8 +60,6 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
     private var webView: WebView? = null
     private lateinit var urlToLoad: String
     private lateinit var urlForError: String
-    private var overridePort: Int? = null
-    private var overrideScheme: String? = null
     private var shortcutInfo: ShortcutInfoCompat? = null
     private var actionBar: ActionBar? = null
 
@@ -84,8 +82,6 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
         webView = view.findViewById(R.id.webview)
         urlToLoad = args.getString(KEY_URL_LOAD) as String
         urlForError = args.getString(KEY_URL_ERROR) as String
-        overridePort = args.get(KEY_OVERRIDE_PORT) as Int?
-        overrideScheme = args.get(KEY_OVERRIDE_SCHEME) as String?
         val action = args.getString(KEY_SHORTCUT_ACTION)
         val extraServerId = args.getInt(KEY_SHORTCUT_EXTRA_SERVER_ID)
         val label = args.getString(KEY_SHORTCUT_LABEL)
@@ -215,19 +211,9 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
         updateViewVisibility(error = false, loading = true)
 
         val webView = webView ?: return
-        val urlBuilder = conn.httpClient.buildUrl(urlToLoad).newBuilder()
+        val url = conn.httpClient.buildUrl(urlToLoad)
 
-        overridePort?.let {
-            urlBuilder.port(it)
-        }
-
-        overrideScheme?.let {
-            urlBuilder.scheme(it)
-        }
-
-        val url = urlBuilder.build()
-
-        webView.setUpForConnection(conn, url, overrideScheme == "http") { progress ->
+        webView.setUpForConnection(conn, url) { progress ->
             if (progress == 100) {
                 updateViewVisibility(error = false, loading = false)
             } else {
@@ -336,8 +322,6 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
         private const val KEY_ERROR = "error"
         private const val KEY_URL_LOAD = "url_load"
         private const val KEY_URL_ERROR = "url_error"
-        private const val KEY_OVERRIDE_PORT = "override_port"
-        private const val KEY_OVERRIDE_SCHEME = "override_scheme"
         private const val KEY_SHORTCUT_ACTION = "shortcut_action"
         private const val KEY_SHORTCUT_EXTRA_SERVER_ID = "shortcut_extra_server_id"
         private const val KEY_SHORTCUT_LABEL = "shortcut_label"
@@ -348,8 +332,6 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
             @StringRes errorMessage: Int,
             urlToLoad: String,
             urlForError: String,
-            overridePort: Int?,
-            overrideScheme: String?,
             serverId: Int,
             shortcutAction: String? = null,
             shortcutLabel: String,
@@ -361,13 +343,10 @@ class WebViewFragment : Fragment(), ConnectionFactory.UpdateListener {
                 KEY_ERROR to errorMessage,
                 KEY_URL_LOAD to urlToLoad,
                 KEY_URL_ERROR to urlForError,
-                KEY_OVERRIDE_PORT to overridePort,
-                KEY_OVERRIDE_SCHEME to overrideScheme,
                 KEY_SHORTCUT_ACTION to shortcutAction,
                 KEY_SHORTCUT_EXTRA_SERVER_ID to serverId,
                 KEY_SHORTCUT_LABEL to shortcutLabel,
-                KEY_SHORTCUT_ICON_RES to shortcutIconRes
-            )
+                KEY_SHORTCUT_ICON_RES to shortcutIconRes)
             return f
         }
     }

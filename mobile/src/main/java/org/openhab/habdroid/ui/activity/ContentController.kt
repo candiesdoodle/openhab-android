@@ -281,18 +281,7 @@ abstract class ContentController protected constructor(private val activity: Mai
         )
         webViewFragment.callback = this
         showTemporaryPage(
-            WebViewFragment.newInstance(
-                title,
-                ui.errorRes,
-                ui.urlToLoad,
-                ui.urlForError,
-                ui.overridePort,
-                ui.overrideScheme,
-                activeServerId,
-                ui.shortcutAction,
-                title,
-                ui.shortcutIconRes
-            )
+            webViewFragment
         )
     }
 
